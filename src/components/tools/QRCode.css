@@ -1,0 +1,19 @@
+.qr-preview {
+  margin-top: 20px;
+  text-align: center;
+}
+.qr-preview img {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px;
+  background: #fff;
+}
+.download-btn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 16px;
+  background: #2563eb;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+}
