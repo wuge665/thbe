@@ -310,13 +310,15 @@ footer {
   margin: 20px 0;
 }
 
-.ad-placeholder {
-  display: inline-block;
-  background: #e2e8f0;
-  color: #94a3b8;
-  padding: 10px 20px;
-  border-radius: 4px;
-  font-size: 12px;
+.tool-description {
+  color: #475569;
+  line-height: 1.8;
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border-left: 4px solid #2563eb;
+  font-size: 15px;
 }
 
 /* 首页英雄区 */
