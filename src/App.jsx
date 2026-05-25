@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom'
 import './App.css'
 import JsonFormatter from './components/tools/JsonFormatter'
 import TimestampConverter from './components/tools/TimestampConverter'
@@ -33,33 +34,56 @@ const tools = [
   { id: 'pension', name: '养老金计算器', desc: '退休养老金预测', keywords: '养老金计算器,退休规划,养老测算' },
 ]
 
-function App() {
-  const [activeTool, setActiveTool] = useState(null)
-  const [activePage, setActivePage] = useState(null)
-  const currentTool = tools.find(t => t.id === activeTool)
-
-  const navigate = (page) => {
-    setActiveTool(null)
-    setActivePage(page)
-  }
+function Home() {
+  const navigate = useNavigate()
 
   useEffect(() => {
-    if (currentTool) {
-      document.title = `${currentTool.name} - DevTools在线工具`
-      const metaDesc = document.querySelector('meta[name="description"]')
-      if (metaDesc) metaDesc.content = `${currentTool.desc}，${currentTool.keywords}，免费在线工具网站。`
-    } else {
-      document.title = 'DevTools - 开发者必备在线工具集合'
-      const metaDesc = document.querySelector('meta[name="description"]')
-      if (metaDesc) metaDesc.content = 'JSON格式化、时间戳转换、Base64编码、密码生成、复利计算器、房贷计算器等免费在线工具集合。'
-    }
-  }, [currentTool])
+    document.title = 'DevTools - 开发者必备在线工具集合'
+    const metaDesc = document.querySelector('meta[name="description"]')
+    if (metaDesc) metaDesc.content = 'JSON格式化、时间戳转换、Base64编码、密码生成、复利计算器、房贷计算器等免费在线工具集合。'
+  }, [])
 
-  const renderTool = () => {
-    if (activePage === 'privacy') return <Privacy />
-    if (activePage === 'about') return <About />
-    if (activePage === 'terms') return <Terms />
-    switch (activeTool) {
+  return (
+    <div className="home">
+      <div className="hero-section">
+        <h1>DevTools</h1>
+        <p className="subtitle">开发者必备 + 理财工具集合</p>
+        <p className="description">免费、开源、易用的在线工具网站</p>
+      </div>
+      <div className="ad-banner-top">
+        <span className="ad-placeholder">广告位 (728x90)</span>
+      </div>
+      <div className="tool-grid">
+        {tools.map(t => (
+          <div key={t.id} className="tool-card" onClick={() => navigate(`/tool/${t.id}`)}>
+            <h3>{t.name}</h3>
+            <p>{t.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div className="ad-banner-bottom">
+        <span className="ad-placeholder">广告位 (728x90)</span>
+      </div>
+    </div>
+  )
+}
+
+function ToolPage() {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const tool = tools.find(t => t.id === id)
+
+  useEffect(() => {
+    if (!tool) { navigate('/', { replace: true }); return }
+    document.title = `${tool.name} - DevTools在线工具`
+    const metaDesc = document.querySelector('meta[name="description"]')
+    if (metaDesc) metaDesc.content = `${tool.desc}，${tool.keywords}，免费在线工具网站。`
+  }, [tool, navigate])
+
+  if (!tool) return null
+
+  const renderToolComponent = () => {
+    switch (id) {
       case 'json': return <JsonFormatter />
       case 'timestamp': return <TimestampConverter />
       case 'base64': return <Base64Tool />
@@ -73,31 +97,36 @@ function App() {
       case 'house': return <HouseCalculator />
       case 'investment': return <InvestmentCalculator />
       case 'pension': return <PensionCalculator />
-      default: return (
-        <div className="home">
-          <div className="hero-section">
-            <h1>🛠️ DevTools</h1>
-            <p className="subtitle">开发者必备 + 理财工具集合</p>
-            <p className="description">免费、开源、易用的在线工具网站</p>
-          </div>
-          <div className="ad-banner-top">
-            <span className="ad-placeholder">广告位 (728x90)</span>
-          </div>
-          <div className="tool-grid">
-            {tools.map(t => (
-              <div key={t.id} className="tool-card" onClick={() => setActiveTool(t.id)}>
-                <h3>{t.name}</h3>
-                <p>{t.desc}</p>
-              </div>
-            ))}
-          </div>
-          <div className="ad-banner-bottom">
-            <span className="ad-placeholder">广告位 (728x90)</span>
-          </div>
-        </div>
-      )
+      default: return null
     }
   }
+
+  return (
+    <div className="tool-container">
+      <h2>{tool.name}</h2>
+      <div className="tool-area">{renderToolComponent()}</div>
+    </div>
+  )
+}
+
+function LegalPage({ title, children, updateMeta }) {
+  useEffect(() => {
+    document.title = `${title} - DevTools`
+    if (updateMeta) updateMeta()
+    else {
+      const metaDesc = document.querySelector('meta[name="description"]')
+      if (metaDesc) metaDesc.content = `${title} - DevTools在线工具网站`
+    }
+  }, [title, updateMeta])
+  return <div className="legal-content">{children}</div>
+}
+
+function App() {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const isActiveTool = (id) => location.pathname === `/tool/${id}`
+  const isActivePage = (page) => location.pathname === `/${page}`
 
   return (
     <div className="app">
@@ -105,21 +134,42 @@ function App() {
         <span className="ad-placeholder">广告位 (468x60)</span>
       </div>
       <header>
-        <div className="logo" onClick={() => { setActiveTool(null); setActivePage(null) }}>DevTools</div>
+        <div className="logo" onClick={() => navigate('/')}>DevTools</div>
         <nav>
           {tools.map(t => (
-            <button key={t.id} className={activeTool === t.id ? 'active' : ''} onClick={() => setActiveTool(t.id)}>{t.name}</button>
+            <button key={t.id} className={isActiveTool(t.id) ? 'active' : ''} onClick={() => navigate(`/tool/${t.id}`)}>{t.name}</button>
           ))}
         </nav>
       </header>
-      <main>{renderTool()}</main>
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/tool/:id" element={<ToolPage />} />
+          <Route path="/about" element={
+            <LegalPage title="关于我们">
+              <About />
+            </LegalPage>
+          } />
+          <Route path="/privacy" element={
+            <LegalPage title="隐私政策">
+              <Privacy />
+            </LegalPage>
+          } />
+          <Route path="/terms" element={
+            <LegalPage title="使用条款">
+              <Terms />
+            </LegalPage>
+          } />
+          <Route path="*" element={<Home />} />
+        </Routes>
+      </main>
       <div className="ad-footer">
         <span className="ad-placeholder">广告位 (728x90)</span>
       </div>
       <footer>
         <p>© 2026 DevTools - 开发者必备工具</p>
         <p className="footer-links">
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate('about') }}>关于我们</a> | <a href="#" onClick={(e) => { e.preventDefault(); navigate('terms') }}>使用条款</a> | <a href="#" onClick={(e) => { e.preventDefault(); navigate('privacy') }}>隐私政策</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/about') }}>关于我们</a> | <a href="#" onClick={(e) => { e.preventDefault(); navigate('/terms') }}>使用条款</a> | <a href="#" onClick={(e) => { e.preventDefault(); navigate('/privacy') }}>隐私政策</a>
         </p>
       </footer>
     </div>
