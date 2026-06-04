@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom'
+import { LangProvider, useLang } from './LangContext'
 import './App.css'
 import JsonFormatter from './components/tools/JsonFormatter'
 import TimestampConverter from './components/tools/TimestampConverter'
@@ -48,19 +49,20 @@ const tools = [
 
 function Home() {
   const navigate = useNavigate()
+  const { t } = useLang()
 
   useEffect(() => {
-    document.title = 'DevTools - 开发者必备在线工具集合'
+    document.title = t('siteTitle')
     const metaDesc = document.querySelector('meta[name="description"]')
-    if (metaDesc) metaDesc.content = 'JSON格式化、时间戳转换、Base64编码、密码生成、复利计算器、房贷计算器、凯利公式、贷款计算器等免费在线工具集合。'
-  }, [])
+    if (metaDesc) metaDesc.content = t('siteDesc')
+  }, [t])
 
   return (
     <div className="home">
       <div className="hero-section">
         <h1>DevTools</h1>
-        <p className="subtitle">开发者必备 + 理财工具集合</p>
-        <p className="description">免费、开源、易用的在线工具网站</p>
+        <p className="subtitle">{t('subtitle')}</p>
+        <p className="description">{t('description')}</p>
       </div>
       <div className="tool-grid">
         {tools.map(t => (
@@ -78,13 +80,14 @@ function ToolPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const tool = tools.find(t => t.id === id)
+  const { t } = useLang()
 
   useEffect(() => {
     if (!tool) { navigate('/', { replace: true }); return }
-    document.title = `${tool.name} - DevTools在线工具`
+    document.title = `${tool.name} - DevTools`
     const metaDesc = document.querySelector('meta[name="description"]')
-    if (metaDesc) metaDesc.content = `${tool.desc}，${tool.keywords}，免费在线工具网站。`
-  }, [tool, navigate])
+    if (metaDesc) metaDesc.content = `${tool.desc} · ${t('description')}`
+  }, [tool, navigate, t])
 
   if (!tool) return null
 
@@ -137,36 +140,68 @@ function LegalPage({ title, children, updateMeta }) {
 function App() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { t, lang, setLang } = useLang()
+  const [moreOpen, setMoreOpen] = useState(false)
+  const [langOpen, setLangOpen] = useState(false)
+  const moreRef = useRef(null)
+  const langRef = useRef(null)
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (moreRef.current && !moreRef.current.contains(e.target)) setMoreOpen(false)
+      if (langRef.current && !langRef.current.contains(e.target)) setLangOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
 
   const isActiveTool = (id) => location.pathname === `/tool/${id}`
   const isActivePage = (page) => location.pathname === `/${page}`
+
+  const pinTools = tools.slice(0, 5)
+  const moreTools = tools.slice(5)
 
   return (
     <div className="app">
       <header>
         <div className="logo" onClick={() => navigate('/')}>DevTools</div>
         <nav>
-          {tools.map(t => (
+          {pinTools.map(t => (
             <button key={t.id} className={isActiveTool(t.id) ? 'active' : ''} onClick={() => navigate(`/tool/${t.id}`)}>{t.name}</button>
           ))}
+          <div className="dropdown" ref={moreRef}>
+            <button className={`dropdown-btn${moreTools.some(t => isActiveTool(t.id)) ? ' active' : ''}`} onClick={() => setMoreOpen(!moreOpen)}>{t('more')} ▾</button>
+            {moreOpen && <div className="dropdown-menu">
+              {moreTools.map(t => (
+                <button key={t.id} className={isActiveTool(t.id) ? 'active' : ''} onClick={() => { navigate(`/tool/${t.id}`); setMoreOpen(false) }}>{t.name}</button>
+              ))}
+            </div>}
+          </div>
         </nav>
+        <div className="lang-switcher" ref={langRef}>
+          <button className="lang-btn" onClick={() => setLangOpen(!langOpen)}>🌐 {lang === 'zh' ? '中文' : 'English'} ▾</button>
+          {langOpen && <div className="lang-menu">
+            <button className={lang === 'zh' ? 'active' : ''} onClick={() => { setLang('zh'); setLangOpen(false) }}>中文</button>
+            <button className={lang === 'en' ? 'active' : ''} onClick={() => { setLang('en'); setLangOpen(false) }}>English</button>
+          </div>}
+        </div>
       </header>
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/tool/:id" element={<ToolPage />} />
           <Route path="/about" element={
-            <LegalPage title="关于我们">
+            <LegalPage title={t('about')}>
               <About />
             </LegalPage>
           } />
           <Route path="/privacy" element={
-            <LegalPage title="隐私政策">
+            <LegalPage title={t('privacy')}>
               <Privacy />
             </LegalPage>
           } />
           <Route path="/terms" element={
-            <LegalPage title="使用条款">
+            <LegalPage title={t('terms')}>
               <Terms />
             </LegalPage>
           } />
@@ -174,13 +209,17 @@ function App() {
         </Routes>
       </main>
       <footer>
-        <p>© 2026 DevTools - 开发者必备工具</p>
+        <p>© 2026 DevTools - {t('footer')}</p>
         <p className="footer-links">
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/about') }}>关于我们</a> | <a href="#" onClick={(e) => { e.preventDefault(); navigate('/terms') }}>使用条款</a> | <a href="#" onClick={(e) => { e.preventDefault(); navigate('/privacy') }}>隐私政策</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/about') }}>{t('about')}</a> | <a href="#" onClick={(e) => { e.preventDefault(); navigate('/terms') }}>{t('terms')}</a> | <a href="#" onClick={(e) => { e.preventDefault(); navigate('/privacy') }}>{t('privacy')}</a>
         </p>
       </footer>
     </div>
   )
 }
 
-export default App
+function AppWithLang() {
+  return <LangProvider><App /></LangProvider>
+}
+
+export default AppWithLang

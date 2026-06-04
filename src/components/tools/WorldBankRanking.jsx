@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Chart, registerables } from 'chart.js'
+import { useLang } from '../../LangContext'
 
 Chart.register(...registerables)
 
@@ -9,16 +10,7 @@ function countryToFlag(code) {
   return String.fromCodePoint(...cp)
 }
 
-function formatValue(value, unit) {
-  if (value == null) return '-'
-  const num = Number(value)
-  if (unit === 'trillion') return (num / 1e12).toFixed(2) + '万亿美元'
-  if (unit === 'thousand') return num.toLocaleString() + '美元'
-  if (unit === 'population') return (num / 1e8).toFixed(2) + '亿'
-  return num.toLocaleString()
-}
-
-function formatChartValue(value) {
+function fmtChart(value) {
   if (value == null) return '-'
   const num = Number(value)
   if (num >= 1e12) return '$' + (num / 1e12).toFixed(2) + 'T'
@@ -28,6 +20,7 @@ function formatChartValue(value) {
 }
 
 export default function WorldBankRanking({ indicator, title, unit }) {
+  const { t, lang } = useLang()
   const [allData, setAllData] = useState({})
   const [years, setYears] = useState([])
   const [selectedYear, setSelectedYear] = useState('')
@@ -54,7 +47,8 @@ export default function WorldBankRanking({ indicator, title, unit }) {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const res = await fetch(`https://api.worldbank.org/v2/country/all/indicator/${indicator}?format=json&per_page=5000&date=2019:2024&locale=zh`)
+      const locale = lang === 'en' ? 'en' : 'zh'
+      const res = await fetch(`https://api.worldbank.org/v2/country/all/indicator/${indicator}?format=json&per_page=5000&date=2019:2024&locale=${locale}`)
       const json = await res.json()
       if (!json[1]) return
 
@@ -139,46 +133,55 @@ export default function WorldBankRanking({ indicator, title, unit }) {
           legend: { position: 'top' },
           tooltip: {
             callbacks: {
-              label: (ctx) => `${ctx.dataset.label}: ${formatChartValue(ctx.raw)}`
+              label: (ctx) => `${ctx.dataset.label}: ${fmtChart(ctx.raw)}`
             }
           }
         },
         scales: {
           y: {
-            ticks: { callback: (v) => formatChartValue(v) }
+            ticks: { callback: (v) => fmtChart(v) }
           }
         }
       }
     })
   }
 
-  const maxValue = getYearData().length > 0 ? getYearData()[0].value : 1
+  const fv = (value) => {
+    if (value == null) return '-'
+    const num = Number(value)
+    if (unit === 'trillion') return (num / 1e12).toFixed(2) + t('unitTrillion')
+    if (unit === 'thousand') return num.toLocaleString() + t('unitThousand')
+    if (unit === 'population') return (num / 1e8).toFixed(2) + t('unitPopulation')
+    return num.toLocaleString()
+  }
+
+  const colLabel = unit === 'population' ? t('population') : unit === 'thousand' ? t('gdpCapita') : t('gdp')
 
   return (
     <div>
       <div className="field" style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-        <label>年份:</label>
+        <label>{t('year')}:</label>
         <select value={selectedYear} onChange={e => setSelectedYear(e.target.value)}>
-          {years.map(y => <option key={y} value={y}>{y}年</option>)}
+          {years.map(y => <option key={y} value={y}>{y}{lang === 'zh' ? '年' : ''}</option>)}
         </select>
-        <label>搜索:</label>
-        <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="输入国家名称..." style={{ flex: 1, minWidth: 120 }} />
+        <label>{t('search')}:</label>
+        <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder={t('inputCountry')} style={{ flex: 1, minWidth: 120 }} />
       </div>
 
-      {loading && <p style={{ color: '#666', padding: 20 }}>加载中...</p>}
+      {loading && <p style={{ color: '#666', padding: 20 }}>{t('loading')}</p>}
 
       {!loading && (
         <>
-          <p className="table-info">数据来源：世界银行 | 共 {filtered.length} 个国家/地区</p>
+          <p className="table-info">{t('dataFrom')} | {filtered.length} {lang === 'zh' ? '个国家/地区' : 'countries'}</p>
           <div className="table-wrap" style={{ maxHeight: 450 }}>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>排名</th>
+                  <th>{t('rank')}</th>
                   <th></th>
-                  <th>国家/地区</th>
-                  <th style={{ textAlign: 'right' }}>{title.includes('人口') ? '人口' : title.includes('人均') ? '人均GDP' : 'GDP'}</th>
-                  <th style={{ textAlign: 'center' }}>对比</th>
+                  <th>{t('country')}</th>
+                  <th style={{ textAlign: 'right' }}>{colLabel}</th>
+                  <th style={{ textAlign: 'center' }}>{t('compare')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -187,7 +190,7 @@ export default function WorldBankRanking({ indicator, title, unit }) {
                     <td className="rank">{i + 1}</td>
                     <td className="flag-col">{countryToFlag(d.code)}</td>
                     <td>{d.name}</td>
-                    <td className="num">{formatValue(d.value, unit)}</td>
+                    <td className="num">{fv(d.value)}</td>
                     <td style={{ textAlign: 'center' }}>
                       <button
                         onClick={() => toggleCompare(d.code)}
@@ -212,7 +215,7 @@ export default function WorldBankRanking({ indicator, title, unit }) {
 
           {compare.length > 0 && (
             <div style={{ marginTop: 24 }}>
-              <h4 style={{ marginBottom: 12 }}>历史趋势对比</h4>
+              <h4 style={{ marginBottom: 12 }}>{t('historicalTrend')}</h4>
               <div style={{ position: 'relative', height: 300 }}>
                 <canvas ref={chartRef}></canvas>
               </div>

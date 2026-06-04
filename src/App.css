@@ -503,6 +503,128 @@ footer {
   }
 }
 
+/* 下拉菜单 */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-btn {
+  padding: 8px 16px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.dropdown-btn:hover {
+  background: #e2e8f0;
+}
+
+.dropdown-btn.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  z-index: 100;
+  min-width: 200px;
+  max-height: 60vh;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 8px;
+}
+
+.dropdown-menu button {
+  padding: 8px 12px;
+  border: none;
+  background: #f8fafc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  text-align: left;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.dropdown-menu button:hover {
+  background: #e2e8f0;
+}
+
+.dropdown-menu button.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* 语言切换 */
+.lang-switcher {
+  position: relative;
+  margin-left: 12px;
+}
+
+.lang-btn {
+  padding: 6px 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.lang-btn:hover {
+  background: #f1f5f9;
+}
+
+.lang-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  z-index: 100;
+  min-width: 120px;
+  padding: 4px;
+}
+
+.lang-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  text-align: left;
+}
+
+.lang-menu button:hover {
+  background: #f1f5f9;
+}
+
+.lang-menu button.active {
+  background: #2563eb;
+  color: #fff;
+}
+
 /* 法律页面 */
 .legal-content {
   text-align: left;
