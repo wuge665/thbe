@@ -41,9 +41,9 @@ const tools = [
   { id: 'kelly', name: '凯利公式计算器', desc: '根据胜率和赔率计算最佳投资比例', keywords: '凯利公式,投资比例,仓位管理,凯利公式计算器', content: '凯利公式计算器根据胜率和赔率计算最佳投资比例，辅助仓位管理决策。' },
   { id: 'stock-avg', name: '股票平均价计算器', desc: '分批买入计算平均持仓成本', keywords: '股票平均价,持仓成本,加仓计算,股票计算器', content: '股票平均价计算器用于分批买入股票时计算平均持仓成本，支持多次加仓计算。' },
   { id: 'loan', name: '贷款计算器', desc: '等额本息/等额本金月供利息计算', keywords: '贷款计算器,商业贷款,公积金贷款,月供计算', content: '贷款计算器计算等额本息和等额本金两种方式的月供金额、利息总额及还款计划明细。支持商业贷款和公积金贷款。' },
-  { id: 'gdp', name: '世界GDP排名', desc: '全球各国GDP数据排名', keywords: 'GDP排名,世界经济,国家GDP,GDP数据', content: '全球各国GDP数据排名，包含历年对比与趋势分析。' },
-  { id: 'gdp-capita', name: '世界人均GDP排名', desc: '全球人均GDP排名', keywords: '人均GDP,人均收入,经济排名,GDP数据', content: '全球各国人均GDP数据排名，反映经济发展水平差异。' },
-  { id: 'population', name: '世界人口排名', desc: '全球各国人口数据排名', keywords: '人口排名,世界人口,人口数据,人口统计', content: '全球各国人口数据排名，包含人口总数与密度统计。' },
+  { id: 'gdp', name: '世界GDP排名', desc: '世界银行实时GDP数据，可筛选年份', keywords: 'GDP排名,世界经济,国家GDP,GDP数据', content: '世界GDP排名数据来源于世界银行，动态更新。支持年份切换、国家搜索和多国历史趋势对比。' },
+  { id: 'gdp-capita', name: '世界人均GDP排名', desc: '世界银行实时人均GDP数据', keywords: '人均GDP,人均收入,经济排名,GDP数据', content: '世界人均GDP排名数据来源于世界银行，动态更新。支持年份切换、国家搜索和多国历史趋势对比。' },
+  { id: 'population', name: '世界人口排名', desc: '世界银行实时人口数据', keywords: '人口排名,世界人口,人口数据,人口统计', content: '世界人口排名数据来源于世界银行，动态更新。支持年份切换、国家搜索和多国历史趋势对比。' },
 ]
 
 function Home() {
