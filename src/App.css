@@ -108,6 +108,7 @@ main {
   font-size: 14px;
 }
 
+
 .tool-container h2 {
   margin-bottom: 24px;
   font-size: 28px;
@@ -250,12 +251,25 @@ main {
 
 .result-box {
   margin-top: 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
   background: #f0fdf4;
-  padding: 12px;
+  padding: 16px;
   border-radius: 8px;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.result-row + .result-row {
+  border-top: 1px solid #d1fae5;
+}
+
+.result-row strong {
+  font-size: 16px;
+  color: #059669;
 }
 
 .result-box code {
@@ -412,6 +426,59 @@ footer {
   margin-top: 8px;
   padding: 4px 12px;
   font-size: 12px;
+}
+
+/* 数据表格 */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.data-table th, .data-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.data-table th {
+  background: #f1f5f9;
+  font-weight: 600;
+  color: #475569;
+  position: sticky;
+  top: 0;
+}
+
+.data-table tr:hover {
+  background: #f8fafc;
+}
+
+.data-table .rank {
+  color: #2563eb;
+  font-weight: 700;
+  width: 40px;
+}
+
+.data-table .num {
+  font-family: monospace;
+  text-align: right;
+}
+
+.data-table .flag-col {
+  width: 40px;
+}
+
+.table-wrap {
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.table-info {
+  color: #64748b;
+  font-size: 13px;
+  margin-bottom: 12px;
 }
 
 /* 响应式 */

@@ -14,6 +14,12 @@ import CompoundInterest from './components/tools/CompoundInterest'
 import HouseCalculator from './components/tools/HouseCalculator'
 import InvestmentCalculator from './components/tools/InvestmentCalculator'
 import PensionCalculator from './components/tools/PensionCalculator'
+import KellyCalculator from './components/tools/KellyCalculator'
+import StockAverage from './components/tools/StockAverage'
+import LoanCalculator from './components/tools/LoanCalculator'
+import GDPRanking from './components/tools/GDPRanking'
+import GDPCapitaRanking from './components/tools/GDPCapitaRanking'
+import PopulationRanking from './components/tools/PopulationRanking'
 import Privacy from './pages/Privacy'
 import About from './pages/About'
 import Terms from './pages/Terms'
@@ -32,6 +38,12 @@ const tools = [
   { id: 'house', name: '房贷计算器', desc: '房贷月供利息计算', keywords: '房贷计算器,贷款计算,月供计算', content: '房贷计算器用于计算商业贷款和公积金贷款的月供金额和总利息。支持等额本息和等额本金两种还款方式。输入贷款总额、年利率和贷款年限即可得到详细的还款计划表，包括每月还款额、利息占比和还款总额。帮助购房者合理规划贷款方案。' },
   { id: 'investment', name: '定投计算器', desc: '基金定投收益计算', keywords: '定投计算器,基金定投,收益计算', content: '定投计算器模拟基金定投的长期收益。定投是定期定额投资基金的方式，通过长期坚持和复利效应实现财富增值。输入每月定投金额、预期年化收益率和定投年限，可计算出到期总投入、总收益和最终资产总值。展示不同收益率下的收益对比。' },
   { id: 'pension', name: '养老金计算器', desc: '退休养老金预测', keywords: '养老金计算器,退休规划,养老测算', content: '养老金计算器帮助规划退休养老储备。输入当前年龄、预计退休年龄、当前月支出、预期通胀率和已储备金额，系统将计算退休后每月所需生活费以及养老金总缺口。提前规划养老，确保退休生活品质。建议每年重新评估养老计划。' },
+  { id: 'kelly', name: '凯利公式计算器', desc: '根据胜率和赔率计算最佳投资比例', keywords: '凯利公式,投资比例,仓位管理,凯利公式计算器', content: '凯利公式计算器根据胜率和赔率计算最佳投资比例，辅助仓位管理决策。' },
+  { id: 'stock-avg', name: '股票平均价计算器', desc: '分批买入计算平均持仓成本', keywords: '股票平均价,持仓成本,加仓计算,股票计算器', content: '股票平均价计算器用于分批买入股票时计算平均持仓成本，支持多次加仓计算。' },
+  { id: 'loan', name: '贷款计算器', desc: '等额本息/等额本金月供利息计算', keywords: '贷款计算器,商业贷款,公积金贷款,月供计算', content: '贷款计算器计算等额本息和等额本金两种方式的月供金额、利息总额及还款计划明细。支持商业贷款和公积金贷款。' },
+  { id: 'gdp', name: '世界GDP排名', desc: '全球各国GDP数据排名', keywords: 'GDP排名,世界经济,国家GDP,GDP数据', content: '全球各国GDP数据排名，包含历年对比与趋势分析。' },
+  { id: 'gdp-capita', name: '世界人均GDP排名', desc: '全球人均GDP排名', keywords: '人均GDP,人均收入,经济排名,GDP数据', content: '全球各国人均GDP数据排名，反映经济发展水平差异。' },
+  { id: 'population', name: '世界人口排名', desc: '全球各国人口数据排名', keywords: '人口排名,世界人口,人口数据,人口统计', content: '全球各国人口数据排名，包含人口总数与密度统计。' },
 ]
 
 function Home() {
@@ -40,7 +52,7 @@ function Home() {
   useEffect(() => {
     document.title = 'DevTools - 开发者必备在线工具集合'
     const metaDesc = document.querySelector('meta[name="description"]')
-    if (metaDesc) metaDesc.content = 'JSON格式化、时间戳转换、Base64编码、密码生成、复利计算器、房贷计算器等免费在线工具集合。'
+    if (metaDesc) metaDesc.content = 'JSON格式化、时间戳转换、Base64编码、密码生成、复利计算器、房贷计算器、凯利公式、贷款计算器等免费在线工具集合。'
   }, [])
 
   return (
@@ -91,6 +103,12 @@ function ToolPage() {
       case 'house': return <HouseCalculator />
       case 'investment': return <InvestmentCalculator />
       case 'pension': return <PensionCalculator />
+      case 'kelly': return <KellyCalculator />
+      case 'stock-avg': return <StockAverage />
+      case 'loan': return <LoanCalculator />
+      case 'gdp': return <GDPRanking />
+      case 'gdp-capita': return <GDPCapitaRanking />
+      case 'population': return <PopulationRanking />
       default: return null
     }
   }
