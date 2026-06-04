@@ -356,6 +356,18 @@ footer {
   font-size: 16px;
 }
 
+.site-intro {
+  max-width: 700px;
+  margin: 0 auto 40px;
+  padding: 20px 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  color: #475569;
+  line-height: 1.8;
+  font-size: 15px;
+}
+
 /* 颜色转换 */
 .color-preview {
   width: 100%;
