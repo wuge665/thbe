@@ -67,9 +67,6 @@ function Home() {
       <div className="site-intro">
         <p>DevTools 提供 <strong>19 款免费在线工具</strong>，涵盖开发者工具（JSON格式化、时间戳转换、Base64编解码、密码生成等）和金融计算工具（复利计算器、房贷计算器、定投计算器等），以及基于世界银行实时数据的全球排名查询。无需注册，全部免费使用。</p>
       </div>
-      <div className="ad-placeholder ad-banner">
-        <ins className="adsbygoogle" style={{ display: 'block' }} data-ad-client="ca-pub-5148253505955374" data-ad-slot="" data-ad-format="auto" data-full-width-responsive="true" />
-      </div>
       <div className="tool-grid">
         {tools.map(t => (
           <div key={t.id} className="tool-card" onClick={() => navigate(`/tool/${t.id}`)}>
@@ -127,9 +124,6 @@ function ToolPage() {
       <h2>{tool.name}</h2>
       <p className="tool-description">{tool.content}</p>
       <div className="tool-area">{renderToolComponent()}</div>
-      <div className="ad-placeholder ad-tool-bottom">
-        <ins className="adsbygoogle" style={{ display: 'block' }} data-ad-client="ca-pub-5148253505955374" data-ad-slot="" data-ad-format="auto" data-full-width-responsive="true" />
-      </div>
     </div>
   )
 }
@@ -150,10 +144,6 @@ function App() {
   const navigate = useNavigate()
   const location = useLocation()
   const { t, lang, setLang } = useLang()
-
-  useEffect(() => {
-    try { (adsbygoogle = window.adsbygoogle || []).push({}) } catch (e) {}
-  }, [location])
   const [moreOpen, setMoreOpen] = useState(false)
   const [langOpen, setLangOpen] = useState(false)
   const moreRef = useRef(null)

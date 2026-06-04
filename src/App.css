@@ -515,21 +515,6 @@ footer {
   }
 }
 
-/* 广告位 */
-.ad-placeholder {
-  text-align: center;
-  overflow: hidden;
-}
-.ad-banner {
-  margin: 24px auto;
-  max-width: 728px;
-  min-height: 90px;
-}
-.ad-tool-bottom {
-  margin-top: 24px;
-  min-height: 90px;
-}
-
 /* 下拉菜单 */
 .dropdown {
   position: relative;
